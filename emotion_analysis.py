@@ -33,6 +33,7 @@ from transformers import pipeline
 import json
 from pathlib import Path
 import pandas as pd
+import numpy as np
 
 print("Start")
 
@@ -58,20 +59,21 @@ for file in folder_path.iterdir():
             data = json.load(f)
 
         count = 0
-        for i in data:
+        for i in range(10):
 
             count += 1
             if (count%10 == 0):
                 print("+")
-            if (count == 100):
-                break
+
+            index = np.random.randint(0, len(data))
             #print("----------")
 
-            review = data[i]["text"]
+            review = data[index]
             if len(review) > 511:
                 review = review[:511]
             #print(review + "\n")
             result = pipe("Review = " + review)
+            #print(result)
             emotion = result[0]["label"]
             #print("Emotion: " + emotion)
 
@@ -95,8 +97,11 @@ cuisinetoemotion = pd.DataFrame(data_list)
 # If you want to add the file names as a column in the DataFrame:
 cuisinetoemotion["file_name"] = [file.name for file in folder_path.iterdir() if file.is_file()]
 
+cuisinetoemotion.fillna(0, inplace=True)
+
 # Print the DataFrame
 print(cuisinetoemotion)
+cuisinetoemotion.to_csv("emotion.csv", index=False)
 
 
 #cuisinetoemotion = pd.DataFrame(data, columns=['amusement', 'anger', 'annoyance', 'approval', 'caring', 'confusion', 'curiosity', 'desire', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'excitement', 'fear', 'gratitude', 'grief', 'joy', 'love', 'nervousness', 'optimism', 'pride', 'realization', 'relief', 'remorse', 'sadness', 'surprise', 'neutral'])
