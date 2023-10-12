@@ -12,8 +12,10 @@ print("Data successfully read")
 cuisineSort = dict()
 for i in data:
     if data[i]["cuisine"] not in cuisineSort:
-        cuisineSort[data[i]["cuisine"]] = dict()
-    cuisineSort[data[i]["cuisine"]][i] = data[i]
+        # cuisineSort[data[i]["cuisine"]] = dict()
+        cuisineSort[data[i]["cuisine"]] = []
+    # cuisineSort[data[i]["cuisine"]][i] = data[i]
+    cuisineSort[data[i]["cuisine"]].append(data[i]["text"])
 print(len(cuisineSort), "types of cuisines identified")
 for i in cuisineSort:
     json_object = json.dumps(cuisineSort[i], indent= 4)
