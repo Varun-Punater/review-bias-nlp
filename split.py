@@ -22,5 +22,6 @@ for i in cuisineSort:
     outName = "cuisineData/" + outName + ".json"
     with open(outName, 'w') as outfile:
         outfile.write(json_object)
+    outfile.close()
 print("Job done")
 
