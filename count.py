@@ -7,16 +7,15 @@ cuisineCount = [0] * len(cuisineTypes)
 
 f = open("yelpData.json", "r")
 data = json.load(f)
-# with open("test1.json", "r") as file:
-#     for line in file:
-#         entry = json.loads(line)
-#         if entry["cuisine"] in cuisineTypes:
-#             cuisineCount[cuisineTypes.index(entry["cuisine"])]+=1
+
 for i in data:
     # print(i)
-    for j in data[i]["cuisine"]:
-        if j in cuisineTypes:
-            cuisineCount[cuisineTypes.index(j)]+=1
+    # for j in data[i]["cuisine"]:
+    #     print(j)
+    if data[i]["cuisine"] in cuisineTypes:
+        cuisineCount[cuisineTypes.index(data[i]["cuisine"])]+=1
 print(sum(cuisineCount), "total reviews")
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 for i in range(len(cuisineCount)):
     print(cuisineTypes[i], ":", cuisineCount[i])
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
