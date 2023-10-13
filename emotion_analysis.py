@@ -45,6 +45,8 @@ print("Finish huggingface import")
 
 data_list = []
 
+iters = 1000
+
 # Iterate through the files
 for file in folder_path.iterdir():
     if file.is_file():
@@ -59,7 +61,7 @@ for file in folder_path.iterdir():
             data = json.load(f)
 
         count = 0
-        for i in range(10):
+        for i in range(iters):
 
             count += 1
             if (count%10 == 0):
@@ -101,7 +103,7 @@ cuisinetoemotion.fillna(0, inplace=True)
 
 # Print the DataFrame
 print(cuisinetoemotion)
-cuisinetoemotion.to_csv("emotion.csv", index=False)
+cuisinetoemotion.to_csv("emotion1000.csv", index=False)
 
 
 #cuisinetoemotion = pd.DataFrame(data, columns=['amusement', 'anger', 'annoyance', 'approval', 'caring', 'confusion', 'curiosity', 'desire', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'excitement', 'fear', 'gratitude', 'grief', 'joy', 'love', 'nervousness', 'optimism', 'pride', 'realization', 'relief', 'remorse', 'sadness', 'surprise', 'neutral'])
