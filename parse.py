@@ -1,12 +1,15 @@
 import json
 
+# file
+DATASET_DIR = "/Users/varunpunater/Downloads/yelp_dataset"
+
 data = dict()
 nameCount = dict()
 tags = []
 nullCount = 0
 totCount = 0
 print("Loading restaurant data")
-with open("yelp_dataset/yelp_academic_dataset_business.json", "r") as file:
+with open(DATASET_DIR + "/yelp_academic_dataset_business.json", "r") as file:
     for line in file:
         entry = json.loads(line)
         if entry["categories"] != None: #converts categories string into a list
@@ -91,7 +94,7 @@ for i in cuisineTypes:
     cuisineReviews[i] = []
 reviewTot = 0
 print("Loading all reviews")
-with open("yelp_dataset/yelp_academic_dataset_review.json", "r") as file:
+with open(DATASET_DIR + "/yelp_academic_dataset_review.json", "r") as file:
     for line in file:
         entry = json.loads(line)
         if entry["business_id"] in restaurantToCuisine:

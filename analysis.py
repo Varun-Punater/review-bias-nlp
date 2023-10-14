@@ -25,7 +25,7 @@ sentiment_dataframe = DataFrame(columns=["cuisine", "yelp_avg_neg", "yelp_avg_nu
 
 CUISINE_DIR = "cuisineData"
 
-SAMPLES_PER_CUISINE = 50
+SAMPLES_PER_CUISINE = 1000
 
 for filename in os.listdir(CUISINE_DIR):
     if filename.endswith('.json'):
@@ -39,14 +39,10 @@ for filename in os.listdir(CUISINE_DIR):
             rob_sum = np.zeros(3)
             
             # print the first 3 reviews
-            count = 0
-            for i in data:
+            for i in range(SAMPLES_PER_CUISINE):
 
-                if count == SAMPLES_PER_CUISINE:
-                    break
-                count += 1
-                
-                review = data[i]["text"]
+                index = np.random.randint(0, len(data))
+                review = data[index]
                 
                 # yelp
                 yelp_inputs = yelp_tknzr(review, return_tensors="pt", add_special_tokens=True, padding=True, truncation=True, max_length=512)
@@ -80,4 +76,4 @@ print("Sentiment dataframe:")
 print(sentiment_dataframe)
 
 # save the dataframe to sentiment.csv
-sentiment_dataframe.to_csv("sentiment.csv", index=False)
+sentiment_dataframe.to_csv("sentiment_table_" + str(SAMPLES_PER_CUISINE) + "_samples.csv", index=False)
