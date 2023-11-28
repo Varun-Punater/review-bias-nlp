@@ -49,20 +49,21 @@ def read_parsed_json(filename):
 data, cuisine_type = read_parsed_json("parsed_kmeans_data.json")
 
 #use inertia to determine best number of clusters
-lowest_inertia = 0
-lowesti_cluster = 1
-for i in range(1, 20):
-    t1, t2, inertia = kmeans_cluster(data, int(i))
-    print("\nCluster " + str(i) + ", inertia " + str(inertia))
-    if i == 1:
-        lowest_inertia = inertia
-    else:
-        if inertia < lowest_inertia:
-            lowest_inertia = inertia
-            lowesti_cluster = i
-print("\nLowest inertia is cluster size " + str(lowesti_cluster) + " with inertia " + str(lowest_inertia))
+# lowest_inertia = 0
+# lowesti_cluster = 1
+# for i in range(1, 20):
+#     t1, t2, inertia = kmeans_cluster(data, int(i))
+#     print("\nCluster " + str(i) + ", inertia " + str(inertia))
+#     if i == 1:
+#         lowest_inertia = inertia
+#     else:
+#         if inertia < lowest_inertia:
+#             lowest_inertia = inertia
+#             lowesti_cluster = i
+# print("\nLowest inertia is cluster size " + str(lowesti_cluster) + " with inertia " + str(lowest_inertia))
 
-num_clusters = lowesti_cluster
+# num_clusters = lowesti_cluster
+num_clusters = 2
 cluster_labels, cluster_centers, inertia = kmeans_cluster(data, num_clusters)
 
 #print out results
@@ -75,6 +76,21 @@ print("\nCluster Centers:\n", cluster_centers_df)
 
 cluster_labels_df.to_csv(("cluster_labels_df.csv"), index=False)
 cluster_centers_df.to_csv(("cluster_centers_df.csv"), index=False)
+
+# Iterate through clusters to create DataFrames and print breakdown
+for cluster_num in range(num_clusters):
+    cluster_indices = np.where(cluster_labels == cluster_num)[0]
+    cluster_cuisines = cuisine_type[cluster_indices]
+
+    # Create a DataFrame for the current cluster
+    cluster_df = pd.DataFrame(cluster_cuisines, columns=['CuisineType'])
+    cluster_df['Cluster'] = cluster_num
+
+    # Print breakdown for the current cluster
+    print("\nBreakdown for Cluster " + str(cluster_num) + ":\n", cluster_df['CuisineType'].value_counts())
+
+    # Save cluster_df to a CSV file
+    cluster_df.to_csv("cluster_" + str(cluster_num) + "_breakdown.csv", index=False)
 
 #PCA
 # num_components = 3
