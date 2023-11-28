@@ -9,7 +9,9 @@ tags = []
 nullCount = 0
 totCount = 0
 print("Loading restaurant data")
+
 with open(DATASET_DIR + "/yelp_academic_dataset_business.json", "r") as file:
+
     for line in file:
         entry = json.loads(line)
         if entry["categories"] != None: #converts categories string into a list
@@ -94,7 +96,9 @@ for i in cuisineTypes:
     cuisineReviews[i] = []
 reviewTot = 0
 print("Loading all reviews")
+
 with open(DATASET_DIR + "/yelp_academic_dataset_review.json", "r") as file:
+
     for line in file:
         entry = json.loads(line)
         if entry["business_id"] in restaurantToCuisine:
@@ -119,4 +123,6 @@ json_object = json.dumps(listOut, indent=4)
 # Writing to sample.json
 with open("listOut.json", "w") as outfile:
     outfile.write(json_object)
+
 print("Job done")
+
