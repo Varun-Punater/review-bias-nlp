@@ -63,7 +63,7 @@ data, cuisine_type = read_parsed_json("parsed_kmeans_data.json")
 # print("\nLowest inertia is cluster size " + str(lowesti_cluster) + " with inertia " + str(lowest_inertia))
 
 # num_clusters = lowesti_cluster
-num_clusters = 2
+num_clusters = 4
 cluster_labels, cluster_centers, inertia = kmeans_cluster(data, num_clusters)
 
 #print out results
@@ -87,6 +87,8 @@ for cluster_num in range(num_clusters):
     cluster_df['Cluster'] = cluster_num
 
     # Print breakdown for the current cluster
+    cuisine_labels = ["American (Traditional)", "American (New)", "Cajun/Creole", "Southern", "Soul Food", "Mexican", "Latin American", "Cuban", "Italian", "Mediterranean", "Greek", "French", "Irish", "Spanish", "Chinese", "Japanese", "Thai", "Vietnamese", "Indian", "Korean"]
+    cluster_df['CuisineType'] = cluster_df['CuisineType'].map({i: label for i, label in enumerate(cuisine_labels)})
     print("\nBreakdown for Cluster " + str(cluster_num) + ":\n", cluster_df['CuisineType'].value_counts())
 
     # Save cluster_df to a CSV file
