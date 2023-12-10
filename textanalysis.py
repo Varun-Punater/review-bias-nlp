@@ -9,6 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from sklearn.decomposition import TruncatedSVD
 
 
 # Load the dataset
@@ -60,12 +61,37 @@ reviews_df['processed_text'] = reviews_df['text'].apply(preprocess_text)
 # Display the first few rows of the processed DataFrame
 # print(reviews_df.head())
 
-# Vectorizing the text using TF-IDF
-vectorizer = TfidfVectorizer(max_features=5000)  # Limiting to 5000 features for simplicity
+# # Vectorizing the text using TF-IDF
+# vectorizer = TfidfVectorizer(max_features=5000)  # Limiting to 5000 features for simplicity
+# tfidf_matrix = vectorizer.fit_transform(reviews_df['processed_text'])
+
+# TF-IDF Vectorization with dimensionality reduction
+vectorizer = TfidfVectorizer(max_features=5000, min_df=0.01)
 tfidf_matrix = vectorizer.fit_transform(reviews_df['processed_text'])
 
+# Applying Truncated SVD for dimensionality reduction
+svd = TruncatedSVD(n_components=100)  # Reducing to 100 components
+tfidf_reduced = svd.fit_transform(tfidf_matrix)
+
+# Compute cumulative explained variance ratio
+cumulative_variance = np.cumsum(svd.explained_variance_ratio_)
+
+# Plotting the cumulative explained variance
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, 101), cumulative_variance, marker='o')
+plt.title('Cumulative Explained Variance by SVD Components')
+plt.xlabel('Number of Components')
+plt.ylabel('Cumulative Explained Variance')
+plt.show()
+
+# Convert the reduced matrix back to a DataFrame
+tfidf_reduced_df = pd.DataFrame(tfidf_reduced, index=reviews_df.index)
+
+# Display the reduced TF-IDF DataFrame
+print(tfidf_reduced_df.head())
+
 # Save the vectorized text to a new DataFrame
-tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out(), index=reviews_df.index)
+# tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out(), index=reviews_df.index)
 
 # Display the TF-IDF DataFrame
 # print(tfidf_df.head())
@@ -73,15 +99,17 @@ tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_n
 
 # 1. Combine Text Features with Ratings
 reviews_df['rating'] = pd.to_numeric(reviews_df['rating'], errors='coerce')
-combined_df = pd.concat([tfidf_df, reviews_df[['rating']]], axis=1)
+# combined_df = pd.concat([tfidf_df, reviews_df[['rating']]], axis=1)
+combined_df = pd.concat([tfidf_reduced_df, reviews_df[['rating']]], axis=1)
+combined_df.columns = combined_df.columns.astype(str)
 
 # 2. Normalize the Data
 scaler = StandardScaler()
-normalized_data = scaler.fit_transform(combined_df.fillna(0))
+normalized_data = scaler.fit_transform(combined_df)
 
 # Assuming 'normalized_data' is the scaled TF-IDF data from the previous steps
 
-k_range = range(1,21)
+k_range = range(1,51)
 
 # 1. Run K-means for K from 1 to 20
 inertia_values = []
