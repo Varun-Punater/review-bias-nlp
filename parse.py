@@ -87,7 +87,7 @@ print(dupCount, "doubled counted")
 print(len(restaurantToCuisine), "unique restaurants")
 
 output = dict()
-listOut = []
+# listOut = []
 # reviews = []
 cuisineReviews = dict()
 for i in cuisineTypes:
@@ -105,18 +105,18 @@ with open(DATASET_DIR + "/yelp_academic_dataset_review.json", "r") as file:
             entryDict["text"] = entry["text"]
             entryDict["date"] = entry["date"]
             entryDict["name"] = data[entry["business_id"]]["name"]
-            listOut.append(entryDict)
-            # output[entry["review_id"]] = entryDict
+            # listOut.append(entryDict)
+            output[entry["review_id"]] = entryDict
             # reviews.append(entry)
         reviewTot+=1
-# print(len(output), "reviews related to restaurants obtained")
-print(len(listOut), "reviews related to restaurants obtained")
+print(len(output), "reviews related to restaurants obtained")
+# print(len(listOut), "reviews related to restaurants obtained")
 print("Total reviews:", reviewTot)
 file.close()
 
-# json_object = json.dumps(output, indent=4)
-json_object = json.dumps(listOut, indent=4)
+json_object = json.dumps(output, indent=4)
+# json_object = json.dumps(listOut, indent=4)
 # Writing to sample.json
-with open("listOut.json", "w") as outfile:
+with open("out.json", "w") as outfile:
     outfile.write(json_object)
 print("Job done")
